@@ -1,1 +1,1 @@
-# DLRS_HA
+# Deep Learning Remote Sensing Home Assignment
