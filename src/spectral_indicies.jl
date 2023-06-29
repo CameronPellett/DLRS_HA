@@ -17,5 +17,7 @@ function subset_balance_spectral_indicies(path_to_cells::String, path_for_output
     files_to_copy = path_to_cells .* subset_filenames
     output_dir = path_for_output .* subset_filenames
     
-    cp.(files_to_copy, output_dir)
+    for i in eachindex(files_to_copy)
+        cp(files_to_copy[i], output_dir[i])
+    end
 end

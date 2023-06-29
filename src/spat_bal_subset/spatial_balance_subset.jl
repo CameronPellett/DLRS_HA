@@ -18,17 +18,27 @@ function get_sample(i::Integer, sampled_multi_uniform::Vector{Vector{Float64}})
     [sample[i] for sample in sampled_multi_uniform]
 end
 
-function nearest_neighbour(sample::Vector{Float64}, spectral_indicies::Vector{Vector{Float64}})
+function nearest_neighbour(sample::Vector{Float64}, spectral_indicies::Vector{Vector{Float64}},
+     ignore_index::Vector{Int64})
     dists = [(sample .- spec_ind) .^ 2 for spec_ind in spectral_indicies]
-    min_index = findmin(dists)[2]
-    deleteat!(spectral_indicies, min_index)
+    sumdists = [sum(dist) for dist in dists] 
+    sumdists[ignore_index] = sumdists[ignore_index] .+ Inf64
+    min_index = findmin(sumdists)[2]
     return min_index
 end
 
 function balanced_subset(spectral_ind::Vector{Vector{Float64}}, n::Integer)
-    multi_uniform = extrema(spectral_ind) |> define_multi_uniform
-    sampled_multi_uniform = sample_multi_uniform(multi_uni, n)
+    spec_ind = spectral_ind
+    multi_uniform = extrema(spec_ind) |> define_multi_uniform
+    sampled_multi_uniform = sample_multi_uniform(multi_uniform, n)
     samples = get_sample.(1:n, (sampled_multi_uniform, ))
     
-    nearest_neighbour.(samples, (spectral_ind, ))
+    subset_index = zeros(Int64, n)
+    without_replacement = Int64[]
+    for (i, sample) in enumerate(samples)
+        index = nearest_neighbour(sample, spec_ind, without_replacement)
+        append!(without_replacement, index)
+        subset_index[i] = index
+    end
+    return subset_index
 end

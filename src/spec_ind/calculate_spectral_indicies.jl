@@ -24,7 +24,11 @@ function calculate_spectral_indicies(bands::Vector{Matrix{UInt8}})
     vcat([calculate_spectral_indicies(band) for band in bands]...)
 end
 
-function calculate_spectral_indicies(splitrasters::Vector{Vector{Matrix{UInt8}}})
+function calculate_spectral_indicies(bands::Vector{Matrix{Int16}})
+    vcat([calculate_spectral_indicies(band) for band in bands]...)
+end
+
+function calculate_spectral_indicies(splitrasters::Vector{Vector})
     [calculate_spectral_indicies(bands) for bands in splitrasters]
 end
 
