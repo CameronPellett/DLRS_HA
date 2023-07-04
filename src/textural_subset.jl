@@ -1,7 +1,7 @@
 include(pwd() * "/src/spec_ind/calculate_spectral_indicies.jl")
 include(pwd() * "/src/spat_bal_subset/spatial_balance_subset.jl")
 
-function subset_balance_spectral_indicies(path_to_cells::String, path_for_output::String, subset_n::Integer)
+function textural_subset(path_to_cells::String, path_for_output::String, subset_n::Integer)
     #get_all_cells
     filenames = readdir(path_to_cells)
     files = path_to_cells .* filenames
